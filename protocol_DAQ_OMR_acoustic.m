@@ -1,3 +1,6 @@
+%% Protocol for testing OMR bias to acoustic stimulation
+
+
 clc;
 
 % ----- Setup DAQ -----
@@ -46,7 +49,9 @@ outputData = [trigCam trigVib];
 
 %% ----- Create saving folder
 f = input('Run number?\n');
-name  = sprintf('Run%d',f);
+d = floor(f/10);
+u = floor(f-d*10);
+name  = sprintf('run_%d%d',d,u);
 directory_run = fullfile(directory,day,name);
 mkdir(directory_run);
 mkdir(fullfile(directory_run,'movie'));
@@ -62,7 +67,7 @@ while strcmp(n,'y') == 1
     if strcmp(in,'y') == 1
         disp('Wait for 1 min before starting a new experiment');
         
-        waitbar_time(20,'Wait 1 min')
+        waitbar_time(60,'Wait 1 min')
         
         queueOutputData(Dev, outputData);
         startBackground(Dev);
