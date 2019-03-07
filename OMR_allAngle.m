@@ -32,7 +32,7 @@ Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
 
 % parameters
 cycle_mm = 20;
-OMRangle = 0;
+OMRangle = 180;
 speed_mm_s = 40;
 
 %Calibration projector

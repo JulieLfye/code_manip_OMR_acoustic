@@ -1,12 +1,13 @@
 %% Protocol for testing OMR bias to acoustic stimulation
 
-
+sca;
+clear;
 clc;
 
 % ----- Setup DAQ -----
 Dev = daq.createSession('ni');
-addAnalogOutputChannel(Dev, 'Dev3', 'ao0', 'Voltage');
-addAnalogOutputChannel(Dev, 'Dev3', 'ao1', 'Voltage');
+addAnalogOutputChannel(Dev, 'Dev3', 'ao0', 'Voltage'); %camera
+addAnalogOutputChannel(Dev, 'Dev3', 'ao1', 'Voltage'); %trig vibration
 Dev.Rate = 1000;
 outputData = [0 0];
 trig = 500;
@@ -18,7 +19,7 @@ g = input('fish age ? (dpf)');
 fish_state = ['WT ' num2str(g) ' dpf'];
 formatOut = 'yy-mm-dd';
 day = datestr(now,formatOut);
-directory='F:\Project\Julie\pot_vibrant\';
+directory='F:\Project\Julie\OMR_acoustic\';
 
 % ----- Open psychtoolbox, OMR fixed parameters -----
 [screenXpixels, screenYpixels, window, white, black, ifi, windowRect,...
@@ -67,7 +68,12 @@ while strcmp(n,'y') == 1
     if strcmp(in,'y') == 1
         disp('Wait for 1 min before starting a new experiment');
         
-        waitbar_time(60,'Wait 1 min')
+        waitbar_time(30,'Wait 30 sec')
+        % OMR radial to bring all the fish at the center
+        disp('Radial OMR for 10 sec')
+        [vbl]=OMR_radial_f(vbl,10*1000,screenXpixels,screenYpixels,...
+    window,ifi,black, white);
+        waitbar_time(20,'Wait 20 sec')
         
         queueOutputData(Dev, outputData);
         startBackground(Dev);
@@ -101,7 +107,9 @@ while strcmp(n,'y') == 1
     n = input('Start with the same parameters? [y]:yes  [n]:no\n','s');
     if strcmp(n,'y') == 1
         f = f + 1;
-        name  = sprintf('Run%d',f);
+        d = floor(f/10);
+        u = floor(f-d*10);
+        name  = sprintf('run_%d%d',d,u);
         directory_run = fullfile(directory,day,name);
         mkdir(directory_run);
         mkdir(fullfile(directory_run,'movie'));

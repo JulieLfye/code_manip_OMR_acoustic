@@ -1,6 +1,5 @@
 %% Protocol for testing response to OMR stimulation
 
-
 sca;
 clear;
 clc
@@ -9,6 +8,9 @@ clc
 Dev = daq.createSession('ni');
 addAnalogOutputChannel(Dev, 'Dev3', 'ao0', 'Voltage');
 Dev.Rate = 1000;
+outputData0 = 0;
+queueOutputData(Dev, outputData0);
+startBackground(Dev);
 
 % ----- Create saving folder -----
 g = input('fish age ? (dpf)');
@@ -32,14 +34,13 @@ mkdir(fullfile(directory_run,'movie'));
 % --- OMR parameters
 xChamber = 1000; %in pix
 yChamber = 1000; %in pix
-OMRangle = rand*360;
 cycle_mm = 10; %size cycle (black +white) in mm
-speed_mm_s = 20;
+speed_mm_s = 30;
 backgroundColor = white;
 time_ms = 11*1000;
 
 trig = 500;
-trigCam = [ones(trig,1)*2; zeros(3*trig, 1)];
+trigCam = [ones(trig,1)*3; zeros(3*trig, 1)];
 outputData = trigCam;
 
 disp('----- Start the camera recording on FlyCap !!! -----');
@@ -48,9 +49,10 @@ n = 'y';
 
 while strcmp(n,'y') == 1
     if strcmp(in,'y') == 1
-        disp('Wait for 1 min before starting a new experiment');
+        OMRangle = rand*360;
+        disp('Wait for 20 sec before starting a new experiment');
         
-        waitbar_time(60,'Wait 1 min')
+        waitbar_time(20,'Wait 20 sec')
         
         queueOutputData(Dev, outputData);
         startBackground(Dev);
@@ -58,7 +60,7 @@ while strcmp(n,'y') == 1
         
         OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
             xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
-            speed_mm_s,OMRduration,backgroundColor);
+            speed_mm_s,time_ms,backgroundColor);
         
         pause(4*trig/1000); % wait end of recording
         
