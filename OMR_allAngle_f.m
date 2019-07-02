@@ -10,7 +10,7 @@ function [vbl]=OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
 
 %% Code
 % Calibration projector
-pix_per_mm = 5.102;
+pix_per_mm = 400/120;
 pixPerCycle = cycle_mm * pix_per_mm;
 
 % Calculs

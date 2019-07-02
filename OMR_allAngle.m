@@ -11,7 +11,7 @@ PsychDefaultSetup(2);
 % Get the screen numbers
 screens = Screen('Screens');
 % Draw to the external screen if avaliable
-screenNumber = max(screens);
+screenNumber = 1;
 % Define black and white
 white = WhiteIndex(screenNumber);
 black = BlackIndex(screenNumber);
@@ -33,10 +33,10 @@ Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
 % parameters
 cycle_mm = 20;
 OMRangle = 180;
-speed_mm_s = 40;
+speed_mm_s = 10;
 
 %Calibration projector
-pix_per_mm = 5.102;
+pix_per_mm = 400/120;
 pixPerCycle = cycle_mm * pix_per_mm;
 
 % Size of the chamber in pix 

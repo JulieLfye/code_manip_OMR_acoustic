@@ -11,7 +11,7 @@ PsychDefaultSetup(2);
 % Get the screen numbers
 screens = Screen('Screens');
 % Draw to the external screen if avaliable
-screenNumber = max(screens);
+screenNumber = 1;
 % Define black and white
 white = WhiteIndex(screenNumber);
 black = BlackIndex(screenNumber);

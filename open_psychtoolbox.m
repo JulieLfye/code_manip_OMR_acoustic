@@ -18,7 +18,7 @@ Screen('Preference', 'SkipSyncTests', 1);
 % Get the screen numbers
 screens = Screen('Screens');
 % Select external screen
-screenNumber = max(screens);
+screenNumber = 1;
 % Define black and white
 white = WhiteIndex(screenNumber);
 black = BlackIndex(screenNumber);

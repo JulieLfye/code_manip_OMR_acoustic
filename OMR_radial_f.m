@@ -8,8 +8,8 @@ function [vbl]=OMR_radial_f(vbl,time_ms,screenXpixels,screenYpixels,...
 
 %Code
 %% Projector calibration
-mm_pix = 0.257;
-% 167mm=650pix
+mm_pix = 120/400;
+% 120mm=400pix
 
 %% create the different circles
 
@@ -26,35 +26,41 @@ mmPerCycle_exp = pixPerCycle*mm_pix;
 
 %center of the circle
 %don't change
-xo = screenXpixels / 2;
-yo = screenYpixels / 2;
+xo = screenXpixels / 2 +75;
+yo = screenYpixels / 2 +25;
 
-%black_rect = zeros(4,nbCycle);
 white_rect0 = zeros(4,nbCycleNeeded);
 white_rect = zeros(4,nbCycleNeeded);
+% black_rect0 = ones(4,nbCycleNeeded);
+% black_rect = ones(4,nbCycleNeeded);
+
 for i = 1: nbCycleNeeded
-    %black_rect(:,i) = [xo - (2*i-0.5)*layer ; yo - (2*i-0.5)*layer ; xo + (2*i-0.5)*layer ; yo + (2*i-0.5)*layer];
     white_rect0(:,i) = [xo - (2*(i-1)+0.5)*layer ; yo - (2*(i-1)+0.5)*layer ; xo + (2*(i-1)+0.5)*layer ; yo + (2*(i-1)+0.5)*layer];
+%     black_rect0(:,i) = [xo - (2*(i-1)+0.5)*layer ; yo - (2*(i-1)+0.5)*layer ; xo + (2*(i-1)+0.5)*layer ; yo + (2*(i-1)+0.5)*layer];
 end
 
 % Drift speed cycles per second
-velocity = 20*1.5;
+velocity = 20*2;
 cyclesPerSecond = velocity/mmPerCycle_exp; %velocity
 waitframes = 1;
 waitduration = waitframes * ifi;
 shiftPerFrame = cyclesPerSecond * pixPerCycle * waitduration;
-%vbl = Screen('Flip', window);
 offmask = 2*layer*(nbCycle+0.5);
 
 frameCounter = 0;
 Maxframecounter = round(time_ms/(ifi*1000));
 
+Screen('FillRect', window, black);
 while frameCounter < Maxframecounter
     xoffset = mod(frameCounter * shiftPerFrame, pixPerCycle);
     white_rect(1,:) = white_rect0(1,:) + xoffset;
     white_rect(2,:) = white_rect0(2,:) + xoffset;
     white_rect(3,:) = white_rect0(3,:) - xoffset;
     white_rect(4,:) = white_rect0(4,:) - xoffset;
+%     black_rect(1,:) = black_rect0(1,:) + xoffset;
+%     black_rect(2,:) = black_rect0(2,:) + xoffset;
+%     black_rect(3,:) = black_rect0(3,:) - xoffset;
+%     black_rect(4,:) = black_rect0(4,:) - xoffset;
     frameCounter = frameCounter + 1;
     Screen('FrameOval', window, [255 255 255], white_rect, layer, layer);
     Screen('FrameOval', window, black, [xo-offmask yo-offmask xo+offmask yo+offmask], 2*layer, 2*layer);

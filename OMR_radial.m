@@ -11,13 +11,13 @@ PsychDefaultSetup(2);
 % Get the screen numbers
 screens = Screen('Screens');
 % Draw to the external screen if avaliable
-screenNumber = max(screens);
+screenNumber = 1;
 % Define black and white
 white = WhiteIndex(screenNumber);
 black = BlackIndex(screenNumber);
 grey = white / 2;
 % Open an on screen window
-[window, windowRect] = PsychImaging('OpenWindow', screenNumber, black);
+[window, windowRect] = PsychImaging('OpenWindow', screenNumber, white);
 % Get the size of the on screen window
 [screenXpixels, screenYpixels] = Screen('WindowSize', window);
 % Query the frame duration
@@ -28,7 +28,7 @@ ifi = Screen('GetFlipInterval', window);
 %Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
 
 %% Projector calibration
-mm_pix = 0.257;
+mm_pix = 120/400;
 % 167mm=650pix
 
 %% create the different circles
@@ -46,7 +46,7 @@ mmPerCycle_exp = pixPerCycle*mm_pix;
 
 %center of the circle
 %don't change
-xo = screenXpixels / 2 + 30;
+xo = screenXpixels / 2 + 75;
 yo = screenYpixels / 2 + 25;
 
 white_rect0 = zeros(4,nbCycleNeeded);
@@ -66,7 +66,7 @@ vlb = Screen('Flip', window);
 frameCounter = 0;
 offmask = 2*layer*(nbCycle+0.5);
 
-
+Screen('FillRect', window, black);
 while ~KbCheck
     xoffset = mod(frameCounter * shiftPerFrame, pixPerCycle);
 
