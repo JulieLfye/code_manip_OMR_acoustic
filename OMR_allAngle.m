@@ -31,9 +31,9 @@ Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
 %% create the OMR
 
 % parameters
-cycle_mm = 20;
+cycle_mm = 10;
 OMRangle = 180;
-speed_mm_s = 10;
+speed_mm_s = 20;
 
 %Calibration projector
 pix_per_mm = 400/120;

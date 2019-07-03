@@ -19,6 +19,18 @@ formatOut = 'yy-mm-dd';
 day = datestr(now,formatOut);
 directory='F:\Project\Julie\spontaneous\';
 
+% ----- Open psychtoolbox -----
+[screenXpixels, screenYpixels, window, white, black, ifi, windowRect,...
+    xCenter,yCenter,vbl] = open_psychtoolbox();
+
+% experiment parameters
+time_recording = 10*1000; % in ms
+
+trig = 500;
+trigCam = [ones(trig,1)*3; zeros(4*trig, 1)];
+outputData = trigCam;
+
+%% ----- Create saving folder
 f = input('Run number?\n');
 d = floor(f/10);
 u = floor(f-d*10);
@@ -27,15 +39,7 @@ directory_run = fullfile(directory,day,name);
 mkdir(directory_run);
 mkdir(fullfile(directory_run,'movie'));
 
-% ----- Open psychtoolbox -----
-[screenXpixels, screenYpixels, window, white, black, ifi, windowRect,...
-    xCenter,yCenter,vbl] = open_psychtoolbox();
-
-time_recording = 10*1000; % in ms
-
-trig = 500;
-trigCam = [ones(trig,1)*3; zeros(4*trig, 1)];
-outputData = trigCam;
+%% ----- Protocol -----
 
 disp('----- Start the camera recording on FlyCap !!! -----');
 in = input('Start? [y]:yes  [n]:no\n','s');
@@ -43,9 +47,9 @@ n = 'y';
 
 while strcmp(n,'y') == 1
     if strcmp(in,'y') == 1
-        disp('Wait for 20 sec before starting a new experiment');
         
-        waitbar_time(20,'Wait 20 sec')
+        disp('Wait for 1 min before starting a new experiment');
+        waitbar_time(60,'Wait 1 min')
         
         queueOutputData(Dev, outputData);
         startBackground(Dev);

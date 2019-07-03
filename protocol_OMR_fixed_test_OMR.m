@@ -45,6 +45,8 @@ trig = 500;
 trigCam = [ones(trig,1)*3; zeros(5*trig, 1)];
 outputData = trigCam;
 
+%% Protocol
+
 disp('----- Start the camera recording on FlyCap !!! -----');
 in = input('Start? [y]:yes  [n]:no\n','s');
 n = 'y';
@@ -52,6 +54,10 @@ n = 'y';
 while strcmp(n,'y') == 1
     if strcmp(in,'y') == 1
         OMRangle = rand*360;
+        % here display OMR background !
+        OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
+            xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
+            speed_mm_s,ifi*1000,backgroundColor);
         
         disp('Wait for 1 min before starting a new experiment');
         waitbar_time(60,'Wait 1 min')
@@ -64,8 +70,6 @@ while strcmp(n,'y') == 1
         OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
             xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
             speed_mm_s,time_ms,backgroundColor);
-        Screen('FillRect', window, white);
-        vbl = Screen('Flip', window);
         
         pause(4*trig/1000); % wait end of recording
         

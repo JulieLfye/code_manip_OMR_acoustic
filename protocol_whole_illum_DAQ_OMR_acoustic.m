@@ -27,7 +27,6 @@ directory='F:\Project\Julie\OMR_acoustic\';
 % --- OMR parameters
 xChamber = 1000; %in pix
 yChamber = 1000; %in pix
-OMRangle = 0;
 cycle_mm = 10; %size cycle (black +white) in mm
 speed_mm_s = 20;
 backgroundColor = white;
@@ -66,14 +65,13 @@ n = 'y';
 
 while strcmp(n,'y') == 1
     if strcmp(in,'y') == 1
-        disp('Wait for 1 min before starting a new experiment');
+                OMRangle = rand*360;
+%         disp('Radial OMR for 10 sec')
+%         [vbl]=OMR_radial_f(vbl,10*1000,screenXpixels,screenYpixels,...
+%             window,ifi,black, white);
         
-        waitbar_time(20,'Wait 30 sec')
-        % OMR radial to bring all the fish at the center
-        disp('Radial OMR for 10 sec')
-        [vbl]=OMR_radial_f(vbl,10*1000,screenXpixels,screenYpixels,...
-    window,ifi,black, white);
-        waitbar_time(20,'Wait 20 sec')
+        disp('Wait for 1 min before starting a new experiment');
+        waitbar_time(60,'Wait1 min')
         
         queueOutputData(Dev, outputData);
         startBackground(Dev);
@@ -83,6 +81,8 @@ while strcmp(n,'y') == 1
         [vbl]=OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
             xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
             speed_mm_s,OMRduration,backgroundColor);
+        Screen('FillRect', window, white);
+        vbl = Screen('Flip', window);
         
         pause(4*trig/1000); % wait end of recording
         

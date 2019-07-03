@@ -65,6 +65,3 @@ while frameCounter < Maxframecounter
     Screen('FillRect', window, black, centeredRect);
     vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
 end
-
-Screen('FillRect', window, white);
-vbl = Screen('Flip', window);
