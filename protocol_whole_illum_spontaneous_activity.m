@@ -17,14 +17,14 @@ g = input('fish age ? (dpf)');
 fish_state = ['WT ' num2str(g) ' dpf'];
 formatOut = 'yy-mm-dd';
 day = datestr(now,formatOut);
-directory='F:\Project\Julie\spontaneous\';
+directory='F:\Project\Julie\whole_illumination\spontaneous\';
 
 % ----- Open psychtoolbox -----
 [screenXpixels, screenYpixels, window, white, black, ifi, windowRect,...
     xCenter,yCenter,vbl] = open_psychtoolbox();
 
 % experiment parameters
-time_recording = 10*1000; % in ms
+time_recording = 5*1000; % in ms
 
 trig = 500;
 trigCam = [ones(trig,1)*3; zeros(4*trig, 1)];
@@ -38,6 +38,12 @@ name  = sprintf('run_%d%d',d,u);
 directory_run = fullfile(directory,day,name);
 mkdir(directory_run);
 mkdir(fullfile(directory_run,'movie'));
+
+% ----- Adaptation
+ad = input('10 min adaptation? [y]:yes  [n]:no\n','s');
+if strcmp(ad,'y') == 1
+    waitbar_time(10*60,'Adaptation 10 min');
+end
 
 %% ----- Protocol -----
 
@@ -54,7 +60,7 @@ while strcmp(n,'y') == 1
         queueOutputData(Dev, outputData);
         startBackground(Dev);
         
-        waitbar_time(10,'Recording spontaneous activity')
+        waitbar_time(5,'Recording spontaneous activity')
         
         pause(4*trig/1000); % wait end of recording
         

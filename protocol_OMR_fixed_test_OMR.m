@@ -17,7 +17,7 @@ g = input('fish age ? (dpf)');
 fish_state = ['WT ' num2str(g) ' dpf'];
 formatOut = 'yy-mm-dd';
 day = datestr(now,formatOut);
-directory='F:\Project\Julie\OMR\';
+directory='F:\Project\Julie\OMR_fixed\OMR\';
 
 f = input('Run number?\n');
 d = floor(f/10);
@@ -30,6 +30,8 @@ mkdir(fullfile(directory_run,'movie'));
 % ----- Open psychtoolbox, OMR fixed parameters -----
 [screenXpixels, screenYpixels, window, white, black, ifi, windowRect,...
     xCenter,yCenter,vbl] = open_psychtoolbox();
+Screen('FillRect', window, 0.5);
+vbl = Screen('Flip', window);
 
 % --- OMR parameters
 xChamber = 1000; %in pix
@@ -37,13 +39,23 @@ yChamber = 1000; %in pix
 cycle_mm = 10; %size cycle (black +white) in mm
 speed_mm_s = 20;
 backgroundColor = white;
-time_ms = 11*1000;
+time_ms = 6*1000;
 
 % --- Daq parameters
 time_b_OMR = 1000;
 trig = 500;
 trigCam = [ones(trig,1)*3; zeros(5*trig, 1)];
 outputData = trigCam;
+
+% ----- Adaptation
+ad = input('10 min adaptation? [y]:yes  [n]:no\n','s');
+OMRangle = rand*360;
+OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
+    xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
+    speed_mm_s,ifi*1000,backgroundColor);
+if strcmp(ad,'y') == 1
+    waitbar_time(10*60,'Adaptation 10 min');
+end
 
 %% Protocol
 
@@ -53,11 +65,6 @@ n = 'y';
 
 while strcmp(n,'y') == 1
     if strcmp(in,'y') == 1
-        OMRangle = rand*360;
-        % here display OMR background !
-        OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
-            xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
-            speed_mm_s,ifi*1000,backgroundColor);
         
         disp('Wait for 1 min before starting a new experiment');
         waitbar_time(60,'Wait 1 min')
@@ -88,6 +95,12 @@ while strcmp(n,'y') == 1
         
         data = 'parameters';
         save(fullfile(directory_run, [data name]),'P');
+        
+        OMRangle = rand*360;
+        % here display OMR background !
+        OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
+            xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
+            speed_mm_s,ifi*1000,backgroundColor);
     end
     
     disp('----- Stop the camera recording on FlyCap !!! -----');

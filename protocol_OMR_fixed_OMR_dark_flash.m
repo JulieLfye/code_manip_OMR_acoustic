@@ -4,22 +4,12 @@ sca;
 clear;
 clc;
 
-% ----- Setup DAQ -----
-Dev = daq.createSession('ni');
-addAnalogOutputChannel(Dev, 'Dev3', 'ao0', 'Voltage'); %camera
-addAnalogOutputChannel(Dev, 'Dev3', 'ao1', 'Voltage'); %trig vibration
-Dev.Rate = 1000;
-outputData = [0 0];
-trig = 500;
-queueOutputData(Dev, outputData);
-startBackground(Dev);
-
 % ----- Create saving folder -----
 g = input('fish age ? (dpf)');
 fish_state = ['WT ' num2str(g) ' dpf'];
 formatOut = 'yy-mm-dd';
 day = datestr(now,formatOut);
-directory='F:\Project\Julie\whole_illumination\OMR_acoustic\';
+directory='F:\Project\Julie\OMR_dark_flash\';
 
 % ----- Open psychtoolbox, OMR fixed parameters -----
 [screenXpixels, screenYpixels, window, white, black, ifi, windowRect,...
@@ -32,20 +22,13 @@ speed_mm_s = 20;
 backgroundColor = white;
 
 % ----- Ask for experiment parameters -----
-time_b_OMR = 1000; %in ms
+time_b_OMR = 1000; % in ms
+darkflash_duration = 500; % in ms
 OMRduration = input('OMR duration in ms? ');
-intCamVib = time_b_OMR + OMRduration;
-nb_frames = round((time_b_OMR + OMRduration + 300)*150/1000);
+intCamStim = time_b_OMR + OMRduration + darkflash_duration;
+nb_frames = round((intCamStim + 300)*150/1000);
 fprintf('Number of frame to record: %d\n', nb_frames);
 % disp('----- Set the number of frame to record on FlyCap !!! -----');
-% --- TTL
-trigCam = [ones(trig,1)*3; zeros(intCamVib + 3*trig, 1)];
-trigVib = [zeros(intCamVib, 1); ones(trig,1)*3; zeros(3*trig,1)];
-outputData = [trigCam trigVib];
-
-% ----- Adaptation
-% waitbar_time(2*60,'Adaptation 10 min');
-
 
 %% ----- Create saving folder
 f = input('Run number?\n');
@@ -65,26 +48,23 @@ n = 'y';
 
 while strcmp(n,'y') == 1
     if strcmp(in,'y') == 1
-                OMRangle = rand*360;
-%         disp('Radial OMR for 10 sec')
-%         [vbl]=OMR_radial_f(vbl,10*1000,screenXpixels,screenYpixels,...
-%             window,ifi,black, white);
+        OMRangle = rand*360;
+        % here display OMR background !
+        OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
+            xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
+            speed_mm_s,ifi*1000,backgroundColor);
         
         disp('Wait for 1 min before starting a new experiment');
-        waitbar_time(60,'Wait1 min')
-        
-        queueOutputData(Dev, outputData);
-        startBackground(Dev);
+        waitbar_time(60,'Wait 1 min')
         
         pause(time_b_OMR/1000); % wait until OMR starts
         
-        [vbl]=OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
+        [vbl]=OMR_allAngle_darkflash_f(vbl,screenXpixels,screenYpixels,...
             xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
-            speed_mm_s,OMRduration,backgroundColor);
-        Screen('FillRect', window, white);
-        vbl = Screen('Flip', window);
+            speed_mm_s,OMRduration,backgroundColor,darkflash_duration);
         
-        pause(4*trig/1000); % wait end of recording
+        
+        pause(2); % wait end of recording
         
         %% ----- Save information -----
         P.fish = fish_state;
