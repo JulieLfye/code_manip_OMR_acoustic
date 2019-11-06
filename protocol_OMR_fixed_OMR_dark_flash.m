@@ -9,7 +9,7 @@ g = input('fish age ? (dpf)');
 fish_state = ['WT ' num2str(g) ' dpf'];
 formatOut = 'yy-mm-dd';
 day = datestr(now,formatOut);
-directory='F:\Project\Julie\OMR_dark_flash\';
+directory='D:\free_swimming_fish\OMR_acoustic\OMR_dark_flash\';
 
 % ----- Open psychtoolbox, OMR fixed parameters -----
 [screenXpixels, screenYpixels, window, white, black, ifi, windowRect,...

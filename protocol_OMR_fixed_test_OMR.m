@@ -17,7 +17,7 @@ g = input('fish age ? (dpf)');
 fish_state = ['WT ' num2str(g) ' dpf'];
 formatOut = 'yy-mm-dd';
 day = datestr(now,formatOut);
-directory='F:\Project\Julie\OMR_fixed\OMR\';
+directory='D:\free_swimming_fish\OMR_acoustic\OMR_fixed\OMR\';
 
 f = input('Run number?\n');
 d = floor(f/10);

@@ -32,18 +32,24 @@ Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
 
 % parameters
 cycle_mm = 10;
-OMRangle = 180;
+OMRangle = 0;
 speed_mm_s = 20;
 
 %Calibration projector
-pix_per_mm = 400/120;
+pix_per_mm = 100/13;
 pixPerCycle = cycle_mm * pix_per_mm;
 
 % Size of the chamber in pix 
 xChamber = 1280;
-yChamber = 1280; 
+yChamber = 1280;
 
-angle = mod(-OMRangle + 180, 360);
+% Size of the mask
+xlenght = round(30*pix_per_mm);
+ylenght = round(40*pix_per_mm);
+xo = xCenter;
+yo = yCenter+100;
+
+angle = mod(OMRangle+180, 360);
 speed_pix_s = speed_mm_s * pix_per_mm;
 cyclesPerSecond = speed_pix_s/pixPerCycle;
 
@@ -63,14 +69,15 @@ maxsize = round(sqrt(screenXpixels^2 + screenYpixels^2)+2);
 dstRect0 = [0 0 pixPerCycle*nbCycleNeeded 2*maxsize];
 
 %mask of the chamber
-chamber = CenterRectOnPointd([0, 0, xChamber, yChamber],xCenter, yCenter);
+chamber = CenterRectOnPointd([0, 0, xlenght, ylenght],xo , yo);
+chamber = round(chamber);
 f = find(chamber < 1);
 if isempty(f) == 0
     chamber(f) = 1;
 end
 maskChamber = ones(screenYpixels, screenXpixels,1) * black;
 maskChamber(:,:,2) = 1;
-maskChamber(chamber(2)+1:chamber(4),chamber(1)+1:chamber(3),2) = 0;
+maskChamber(chamber(2)+1:min(chamber(4), screenYpixels),chamber(1)+1:min(chamber(3),screenXpixels),2) = 0;
 maskChamberText = Screen('MakeTexture', window, maskChamber);
 
 % OMR parameters 
@@ -81,9 +88,9 @@ YshiftPerFramePix = cyclesPerSecond * YpixPerCycleAngle * waitduration;
 frameCounter = 0;
 vbl = Screen('Flip', window);
 
-% Photoresistance indicator
-baseRect = [0 0 200 200];
-centeredRect = CenterRectOnPoint(baseRect, xCenter+600, 250);
+% chamber indicator
+baseRect = [0 0 xlenght ylenght];
+centeredRect = CenterRectOnPoint(baseRect, xo, yo);
 
 % draw
 while ~KbCheck
@@ -94,6 +101,6 @@ while ~KbCheck
     filterMode = 0;
     Screen('DrawTexture', window, OMRText, [], dstRect,angle,filterMode);
     Screen('DrawTexture',window, maskChamberText);
-    Screen('FillRect', window, black, centeredRect);
+%     Screen('FillRect', window, white, centeredRect);
     vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
 end

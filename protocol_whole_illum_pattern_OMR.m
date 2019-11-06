@@ -17,7 +17,7 @@ g = input('fish age ? (dpf)');
 fish_state = ['WT ' num2str(g) ' dpf'];
 formatOut = 'yy-mm-dd';
 day = datestr(now,formatOut);
-directory='F:\Project\Julie\whole_illumination\pattern_OMR\';
+directory='D:\free_swimming_fish\OMR_acoustic\whole_illumination\pattern_OMR\';
 
 f = input('Run number?\n');
 d = floor(f/10);
@@ -37,7 +37,7 @@ yChamber = 1000; %in pix
 cycle_mm = 10; %size cycle (black +white) in mm
 speed_mm_s = 0;
 backgroundColor = white;
-time_ms = 1;
+time_ms = 6*1000;
 
 % --- Daq parameters
 time_b_OMR = 1000;
