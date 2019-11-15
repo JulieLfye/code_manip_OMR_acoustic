@@ -114,7 +114,7 @@ while strcmp(n,'y') == 1
         mkdir(directory_run);
         mkdir(fullfile(directory_run,'movie'));
         disp('----- Start the camera recording on FlyCap !!! -----');
-        pause(10)
+        pause(5)
     end
 end
 

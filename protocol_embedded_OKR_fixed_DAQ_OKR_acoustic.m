@@ -47,7 +47,7 @@ outputData = [trigCam trigVib];
 
 % ----- Adaptation
 ad = input('10 min adaptation? [y]:yes  [n]:no\n','s');
-OMRangle = rand*360;
+OMRangle = round(rand)*180;
 OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
     xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
     speed_mm_s,ifi*1000,backgroundColor);
@@ -104,7 +104,7 @@ while strcmp(n,'y') == 1
         data = 'parameters';
         save(fullfile(directory_run, [data name]),'P');
         
-        OMRangle = rand*360;
+        OMRangle = round(rand)*180;
         % here display OMR background !
         OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
             xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
