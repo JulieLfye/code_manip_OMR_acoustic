@@ -29,31 +29,21 @@ vbl = Screen('Flip', window);
 % --- OMR parameters
 xChamber = 1000; %in pix
 yChamber = 1000; %in pix
-cycle_mm = 5; %size cycle (black +white) in mm
-speed_mm_s = 10;
+cycle_mm = 10; %size cycle (black +white) in mm
+speed_mm_s = 20;
 backgroundColor = white;
 
 % ----- Ask for experiment parameters -----
-time_b_OMR = 1000;
+time_b_OMR = 250;
 OMRduration = input('OKR duration in ms? ');
 intCamVib = time_b_OMR + OMRduration;
-nb_frames = round((time_b_OMR + OMRduration + 300)*150/1000);
+nb_frames = round((time_b_OMR + OMRduration + 300)*250/1000);
 fprintf('Number of frame to record: %d\n', nb_frames);
 % disp('----- Set the number of frame to record on FlyCap !!! -----');
 % --- TTL
 trigCam = [ones(trig,1)*3; zeros(intCamVib + 3*trig, 1)];
 trigVib = [zeros(intCamVib, 1); ones(trig,1)*3; zeros(3*trig,1)];
 outputData = [trigCam trigVib];
-
-% ----- Adaptation
-ad = input('10 min adaptation? [y]:yes  [n]:no\n','s');
-OMRangle = round(rand)*180;
-OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
-    xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
-    speed_mm_s,ifi*1000,backgroundColor);
-if strcmp(ad,'y') == 1
-    waitbar_time(10*60,'Adaptation 10 min');
-end
 
 %% ----- Create saving folder
 f = input('Run number?\n');
@@ -64,6 +54,15 @@ directory_run = fullfile(directory,day,name);
 mkdir(directory_run);
 mkdir(fullfile(directory_run,'movie'));
 
+% ----- Adaptation
+ad = input('10 min adaptation? [y]:yes  [n]:no\n','s');
+OMRangle = round(rand)*180;
+OMR_allAngle_f(vbl,screenXpixels,screenYpixels,...
+    xCenter,yCenter,window,ifi,white,black,xChamber,yChamber,OMRangle,cycle_mm,...
+    speed_mm_s,ifi*1000,backgroundColor);
+if strcmp(ad,'y') == 1
+    waitbar_time(10*60,'Adaptation 10 min');
+end
 
 %% ----- Protocol -----
 

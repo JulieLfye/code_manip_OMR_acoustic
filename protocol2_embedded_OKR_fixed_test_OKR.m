@@ -64,6 +64,11 @@ n = 'y';
 while strcmp(n,'y') == 1
     if strcmp(in,'y') == 1
         
+        if OMRangle == 0
+            disp('OMR to the right, O')
+        else
+            disp('OMR to the left, 180')
+        end
         disp('Wait for 1 min before starting a new experiment');
         waitbar_time(60,'Wait 1 min')
         

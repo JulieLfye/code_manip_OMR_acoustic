@@ -14,8 +14,24 @@ Ampmm =  30; % amplitude of OKR stimulus in mm
 Amp = Ampmm*pixmmRatio; % amplitude of OKR stimulus in pix
 freq = 0.5; % in Hertz
 okrp = 1/freq; % half-period of stim in s
-
 w = 2*pi/okrp;
+
+% Size of the mask
+xlenght = round(30*pixmmRatio);
+ylenght = round(40*pixmmRatio);
+xo = xCenter;
+yo = yCenter+100;
+%mask of the chamber
+chamber = CenterRectOnPointd([0, 0, xlenght, ylenght],xo , yo);
+chamber = round(chamber);
+f = find(chamber < 1);
+if isempty(f) == 0
+    chamber(f) = 1;
+end
+maskChamber = ones(screenYpixels, screenXpixels,1) * black;
+maskChamber(:,:,2) = 1;
+maskChamber(chamber(2)+1:min(chamber(4), screenYpixels),chamber(1)+1:min(chamber(3),screenXpixels),2) = 0;
+maskChamberText = Screen('MakeTexture', window, maskChamber);
 
 %% === TIMING & COORDINATION PARAMETERS ===
 
@@ -36,6 +52,7 @@ while ~KbCheck
     xoffset = Amp*sin(in*ifi*w);
     srcRect = [xoffset 0 screenXpixels+xoffset screenYpixels];
     Screen('DrawTexture', window, okrimage, srcRect, [], [], [], [], [255 255 255]);
+    Screen('DrawTexture',window, maskChamberText);
     vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
 end
 
