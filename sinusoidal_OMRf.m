@@ -1,21 +1,20 @@
 function [vbl]=sinusoidal_OMRf(vbl,screenXpixels,screenYpixels,...
-    xCenter,yCenter,window,ifi,white,black,Ampmm,freq,time_ms)
+    xCenter,yCenter,window,ifi,white,black,bandsizemm,speed_mm_s,...
+    freq,time_ms,FirstOmrDirection)
 
 
 % OKR parameters ...
-bandsizemm = 6;
 pixmmRatio = 100/32;
-Amp = Ampmm*pixmmRatio; % amplitude of OKR stimulus in pix
 okrp = 1/freq; % half-period of stim in s
+Ampmm = speed_mm_s * okrp;
+Amp = Ampmm*pixmmRatio;
 w = 2*pi/okrp;
 
 % Size of the mask
-xlenght = round(30*pixmmRatio);
-ylenght = round(40*pixmmRatio);
 xo = xCenter;
 yo = yCenter+100;
 %mask of the chamber
-chamber = CenterRectOnPointd([0, 0, xlenght, ylenght],xo , yo);
+chamber = CenterRectOnPointd([0, 0, 2*Amp, 2*Amp],xo , yo);
 chamber = round(chamber);
 f = find(chamber < 1);
 if isempty(f) == 0
@@ -42,7 +41,7 @@ Maxframecounter = round(time_ms/(ifi*1000));
 
 while frameCounter < Maxframecounter
     frameCounter = frameCounter + 1;
-    xoffset = Amp*sin(frameCounter*ifi*w);
+    xoffset = FirstOmrDirection*Amp*sin(frameCounter*ifi*w);
     srcRect = [xoffset 0 screenXpixels+xoffset screenYpixels];
     Screen('DrawTexture', window, okrimage, srcRect, [], [], [], [], [255 255 255]);
     Screen('DrawTexture',window, maskChamberText);
